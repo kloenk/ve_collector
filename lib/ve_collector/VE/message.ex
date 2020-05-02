@@ -1,32 +1,54 @@
 defmodule VeCollector.VE.Message do
-  @check_constant 0x55
   require Logger
 
+  # TODO: extra Option (flags)
+  def build_message({:get, register}) do
+    register = build_list(register)
+    checksum = build_checksum([7] ++ register)
+    ":7#{encode(register)}00#{encode(checksum, 1)}\r\n"
+    #[7] ++ register ++ [checksum]
+  end
 
-  def build_checksum(list) do
+  defp build_list(n) when is_number(n) do
+    n
+    |> :binary.encode_unsigned()
+    |> :binary.bin_to_list()
+  end
+
+  def check(list) when is_list(list) do
+    do_check(list) == 0x55
+  end
+
+  defp do_check([head | tail]) do
+    <<head + do_check(tail)>>
+    |> :binary.decode_unsigned()
+  end
+
+  defp do_check([]) do
+    0
+  end
+
+  @doc """
+    build the checksum to append to an querry
+  """
+  def build_checksum value
+
+  def build_checksum(value) when is_integer(value) do
+    build_checksum [value]
+  end
+
+  def build_checksum(list) when is_list(list) do
     <<0xff - do_build_checksum(list)>>
-    |> :binary.decode_unsigned 
+    |> :binary.decode_unsigned
   end
 
   defp do_build_checksum([head | tail]) do
-    Logger.debug(Integer.to_string(head))
     v = <<head + do_build_checksum(tail)>>
-    Logger.debug("decode #{inspect(v)}")
     :binary.decode_unsigned v
-    #head = head - build_checksum(tail, checksum)
-    #head = flip_num head
-    #Logger.debug(Integer.to_string(head))
-    #head
   end
 
   defp do_build_checksum([]) do
     170
-  end
-
-  defp flip_num v do
-    v = if v < 0, do: v + 0xff, else: v
-    v = if v > 255, do: v - 0xff, else: v
-    v
   end
 
   @doc """
@@ -49,7 +71,6 @@ defmodule VeCollector.VE.Message do
   end
 
   def encode(msg, size) when is_binary(msg) do
-    Logger.debug(inspect(msg))
     msg
     |> :binary.decode_unsigned(:little)
     |> :binary.encode_unsigned(:big)
