@@ -8,7 +8,8 @@ defmodule VeCollector.Application do
   def start(_type, _args) do
     children = [
       {VeCollector.VE.ClearText, []},
-      {VeCollector.VE.ClearText.Store, []},
+      {VeCollector.VE.ClearText.Store, []}
+      # {VeCollector.Serial, []},
       # Starts a worker by calling: VeCollector.Worker.start_link(arg)
       # {VeCollector.Worker, arg}
     ]

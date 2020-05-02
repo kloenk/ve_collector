@@ -7,7 +7,8 @@ defmodule VeCollector.VE.ClearText do
   end
 
   def start_link(_arg) do
-    start_link() # FIXME: arguments?
+    # FIXME: arguments?
+    start_link()
   end
 
   def init(_) do
@@ -18,16 +19,15 @@ defmodule VeCollector.VE.ClearText do
     GenServer.call(:ve_collector_cleartext, {:parse, line})
   end
 
-
   defp parse_checksum(state) do
-    #IO.puts("unimplemented, parse: #{inspect(state)}")
+    # IO.puts("unimplemented, parse: #{inspect(state)}")
     Store.parse(state)
 
     []
   end
 
   # callbacks
-  def handle_call({:parse, line}, _from , state) do
+  def handle_call({:parse, line}, _from, state) do
     cond do
       String.starts_with?(line, ":") -> {:reply, {:error, :hex_command}, state}
       String.starts_with?(line, "Checksum") -> {:reply, {:ok}, parse_checksum(state ++ [line])}

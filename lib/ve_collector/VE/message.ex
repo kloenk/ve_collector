@@ -5,8 +5,8 @@ defmodule VeCollector.VE.Message do
   def build_message({:get, register}) do
     register = build_list(register)
     checksum = build_checksum([7] ++ register)
-    ":7#{encode(register)}00#{encode(checksum, 1)}\r\n"
-    #[7] ++ register ++ [checksum]
+    ":7#{encode(register)}00#{encode(checksum, 1)}"
+    # [7] ++ register ++ [checksum]
   end
 
   defp build_list(n) when is_number(n) do
@@ -31,20 +31,20 @@ defmodule VeCollector.VE.Message do
   @doc """
     build the checksum to append to an querry
   """
-  def build_checksum value
+  def build_checksum(value)
 
   def build_checksum(value) when is_integer(value) do
-    build_checksum [value]
+    build_checksum([value])
   end
 
   def build_checksum(list) when is_list(list) do
-    <<0xff - do_build_checksum(list)>>
-    |> :binary.decode_unsigned
+    <<0xFF - do_build_checksum(list)>>
+    |> :binary.decode_unsigned()
   end
 
   defp do_build_checksum([head | tail]) do
     v = <<head + do_build_checksum(tail)>>
-    :binary.decode_unsigned v
+    :binary.decode_unsigned(v)
   end
 
   defp do_build_checksum([]) do
@@ -55,6 +55,7 @@ defmodule VeCollector.VE.Message do
    encode a number into the hex value for the ve protocoll (little endian)
   """
   def encode(msg, size \\ 2)
+
   def encode(msg, size) when is_integer(msg) do
     msg
     |> :binary.encode_unsigned(:big)
@@ -77,20 +78,20 @@ defmodule VeCollector.VE.Message do
     |> Base.encode16()
   end
 
-
   def decode(msg) when is_binary(msg) do
     res = Base.decode16(msg, case: :mixed)
 
     case res do
       :error -> {:error, :hex_decode}
-      {:ok, v} -> decode_bitstring v
+      {:ok, v} -> decode_bitstring(v)
     end
   end
 
-  def decode_bitstring msg do
-  msg = msg
-    |> :binary.decode_unsigned(:little)
+  def decode_bitstring(msg) do
+    msg =
+      msg
+      |> :binary.decode_unsigned(:little)
 
-  {:ok, msg}
+    {:ok, msg}
   end
 end

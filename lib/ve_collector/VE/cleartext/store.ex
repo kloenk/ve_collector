@@ -22,13 +22,14 @@ defmodule VeCollector.VE.ClearText.Store do
   end
 
   defp do_parse({:ok, list}) when is_list(list) do
-    list = list
-    |> Stream.map(fn(row) ->
-      String.trim(row) |> String.split("\t")
-    end)
-    |> Stream.filter(&data_row?(&1))
-    |> Stream.map(&parse_row(&1))
-    |> Enum.into(%{})
+    list =
+      list
+      |> Stream.map(fn row ->
+        String.trim(row) |> String.split("\t")
+      end)
+      |> Stream.filter(&data_row?(&1))
+      |> Stream.map(&parse_row(&1))
+      |> Enum.into(%{})
 
     {:ok, list}
   end
@@ -47,7 +48,8 @@ defmodule VeCollector.VE.ClearText.Store do
   defp check(list) when is_list(list) do
     {checksum, list} = List.pop_at(list, -1)
     IO.puts(:stderr, "FIXME: implement checking of #{inspect(list)} which #{inspect(checksum)}")
-    {:ok, list} # FIXME: return with {:error, :invalid_checksum}
+    # FIXME: return with {:error, :invalid_checksum}
+    {:ok, list}
   end
 
   # callbacks
@@ -58,6 +60,4 @@ defmodule VeCollector.VE.ClearText.Store do
 
     {:noreply, state}
   end
-
-
 end
