@@ -9,7 +9,11 @@ defmodule VeCollector.Application do
     children = [
       {VeCollector.VE.ClearText, []},
       {VeCollector.VE.ClearText.Store, []},
-      {DynamicSupervisor, name: VeCollector.SerialSupervisor, strategy: :one_for_one}
+      {DynamicSupervisor, name: VeCollector.SerialSupervisor, strategy: :one_for_one},
+      # Serial Discovery service
+      {VeCollector.Serial.Discover, []},
+      # Serial device registry
+      {VeCollector.Serial.Store, []}
       # Starts a worker by calling: VeCollector.Worker.start_link(arg)
       # {VeCollector.Worker, arg}
     ]

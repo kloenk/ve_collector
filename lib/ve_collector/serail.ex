@@ -16,11 +16,16 @@ defmodule VeCollector.Serial do
   end
 
   def open(pid, port, speed \\ 19200) do
+    Logger.info("open device #{port}")
     GenServer.call(pid, {:open, port, speed}, 5000)
   end
 
   def get_uart_pid(pid) do
     GenServer.call(pid, {:get_pid})
+  end
+
+  defp online(name) do
+    VeCollector.Serial.Store.online(name)
   end
 
   # callbacks
@@ -40,7 +45,8 @@ defmodule VeCollector.Serial do
   end
 
   # parse info
-  def handle_info({:circuits_uart, _name, v}, {pid}) when is_binary(v) do
+  def handle_info({:circuits_uart, name, v}, {pid}) when is_binary(v) do
+    online(name)
     Logger.debug("got msg: #{v}")
     ret = VeCollector.VE.ClearText.parse(v)
     IO.inspect(ret)
@@ -48,6 +54,8 @@ defmodule VeCollector.Serial do
   end
 
   def handle_info({:circuits_uart, name, {:partial, v}}, state) when is_binary(v) do
+    online(name)
+
     if String.starts_with?(v, "Checksum\t") do
       VeCollector.VE.ClearText.parse(v)
     else
