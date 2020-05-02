@@ -47,6 +47,16 @@ defmodule VeCollector.Serial do
     {:noreply, {pid}}
   end
 
+  def handle_info({:circuits_uart, name, {:partial, v}}, state) when is_binary(v) do
+    if String.starts_with?(v, "Checksum\t") do
+      VeCollector.VE.ClearText.parse(v)
+    else
+      Logger.warn("this binary should not come from #{name}, #{inspect(v)}")
+    end
+
+    {:noreply, state}
+  end
+
   def handle_info(v, {pid}) do
     IO.inspect(v)
     {:noreply, {pid}}

@@ -62,8 +62,9 @@ defmodule VeCollector.VE.ClearText.Store do
   end
 
   def handle_cast({:parse, list}, _state) when is_list(list) do
-    list = check(list)
-    |> do_parse()
+    list =
+      check(list)
+      |> do_parse()
 
     {:noreply, list}
   end
