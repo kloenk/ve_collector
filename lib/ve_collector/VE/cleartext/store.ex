@@ -6,11 +6,15 @@ defmodule VeCollector.VE.ClearText.Store do
   end
 
   def start_link(_) do
-    start_link
+    start_link()
   end
 
   def init(_) do
     {:ok, %{}}
+  end
+
+  def get() do
+    GenServer.call(:ve_collector_cleartext_store, {:get})
   end
 
   def parse(list) when is_list(list) do
@@ -41,7 +45,7 @@ defmodule VeCollector.VE.ClearText.Store do
   defp data_row?(row) do
     case row do
       [_, _] -> true
-      _ -> :ok == IO.puts("invalid row: #{inspect(row)}") and false
+      _ -> :ok == IO.puts(:stderr, "invalid row: #{inspect(row)}") and false
     end
   end
 
@@ -53,11 +57,14 @@ defmodule VeCollector.VE.ClearText.Store do
   end
 
   # callbacks
-  def handle_cast({:parse, list}, state) when is_list(list) do
-    check(list)
-    |> do_parse()
-    |> IO.inspect()
+  def handle_call({:get}, _from, state) do
+    {:reply, state, state}
+  end
 
-    {:noreply, state}
+  def handle_cast({:parse, list}, _state) when is_list(list) do
+    list = check(list)
+    |> do_parse()
+
+    {:noreply, list}
   end
 end
