@@ -1,5 +1,5 @@
 defmodule VeCollector.Serial do
-  use GenServer
+  use GenServer, restart: :transient
   require Logger
 
   def start_link() do
@@ -26,6 +26,13 @@ defmodule VeCollector.Serial do
 
   defp online(name) do
     VeCollector.Serial.Store.online(name)
+  end
+
+  defp stop(name, {pid}) do
+    Circuits.UART.close(pid)
+    Circuits.UART.stop(pid)
+    GenServer.cast(VeCollector.Serial.Store, {:stop, name})
+    # VeCollector.Serial.Store.stop_child(name)
   end
 
   # callbacks
@@ -65,8 +72,13 @@ defmodule VeCollector.Serial do
     {:noreply, state}
   end
 
-  def handle_info(v, {pid}) do
-    IO.inspect(v)
-    {:noreply, {pid}}
+  def handle_info({:circuits_uart, name, {:error, :eio}}, {pid}) do
+    stop(name, {pid})
+    {:stop, :normal, {}}
   end
+
+  # def handle_info(v, {pid}) do
+  #  IO.inspect(v)
+  #  {:noreply, {pid}}
+  # end
 end

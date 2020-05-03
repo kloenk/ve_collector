@@ -1,6 +1,13 @@
 defmodule VeCollector.VE.ClearText.Store do
   use GenServer
 
+  @moduledoc """
+  Store cleartext data
+
+  # TODO
+  make a hashmap to support multiple devices
+  """
+
   def start_link() do
     GenServer.start_link(__MODULE__, %{}, name: :ve_collector_cleartext_store)
   end

@@ -1,8 +1,15 @@
 defmodule VeCollector.VE.Message do
   require Logger
 
+  @moduledoc """
+  Functions to build and verify a hex message
+  """
+
+  @doc """
+  build a get message, for the given register
+  """
   # TODO: extra Option (flags)
-  def build_message({:get, register}) do
+  def build_message({:get, register}) when is_number(register) do
     register = build_list(register)
     checksum = build_checksum([7] ++ register)
     ":7#{encode(register)}00#{encode(checksum, 1)}"
@@ -15,6 +22,11 @@ defmodule VeCollector.VE.Message do
     |> :binary.bin_to_list()
   end
 
+  @doc """
+  check the list of bytes if the checksum is correct
+
+  checksum must be included in the list
+  """
   def check(list) when is_list(list) do
     do_check(list) == 0x55
   end
@@ -71,7 +83,8 @@ defmodule VeCollector.VE.Message do
     end
   end
 
-  def encode(msg, size) when is_binary(msg) do
+  # TODO: do we need size?
+  def encode(msg, _size) when is_binary(msg) do
     msg
     |> :binary.decode_unsigned(:little)
     |> :binary.encode_unsigned(:big)
