@@ -8,8 +8,13 @@ defmodule VeCollector.Application do
   def start(_type, _args) do
     children = [
       {VeCollector.VE.ClearText, []},
-      {VeCollector.VE.ClearText.Store, []}
-      # {VeCollector.Serial, []},
+      {VeCollector.VE.ClearText.Store, []},
+      # TODO: maybe build as a Dynamic Module Supervisor and give it a different name
+      {DynamicSupervisor, name: VeCollector.SerialSupervisor, strategy: :one_for_one},
+      # Serial Discovery service
+      {VeCollector.Serial.Discover, []},
+      # Serial device registry
+      {VeCollector.Serial.Store, []}
       # Starts a worker by calling: VeCollector.Worker.start_link(arg)
       # {VeCollector.Worker, arg}
     ]
