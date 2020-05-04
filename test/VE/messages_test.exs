@@ -24,7 +24,7 @@ defmodule VeCollector.VE.MessageTest do
 
   describe "de/encoding" do
     test "decode" do
-      {:ok, 150} = Message.decode("9600")
+      assert {:ok, 150} == Message.decode("9600")
     end
 
     test "encode (size 2)" do
