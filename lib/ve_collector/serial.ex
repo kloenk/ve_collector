@@ -48,9 +48,10 @@ defmodule VeCollector.Serial do
     VeCollector.Serial.Store.online(name)
   end
 
-  defp stop(_name, {pid}) do
+  defp stop(name, {pid}) do
     Circuits.UART.close(pid)
     Circuits.UART.stop(pid)
+    VeCollector.VE.ClearText.Store.put(name, {:error, :closed})
     # VeCollector.Serial.Store.stop_child(name)
   end
 
@@ -65,7 +66,7 @@ defmodule VeCollector.Serial do
   def handle_info({:circuits_uart, name, v}, {pid}) when is_binary(v) do
     online(name)
     Logger.debug("got msg: #{v}")
-    ret = VeCollector.VE.ClearText.parse(v)
+    ret = VeCollector.VE.ClearText.parse(v, name)
     IO.inspect(ret)
     {:noreply, {pid}}
   end
@@ -74,7 +75,7 @@ defmodule VeCollector.Serial do
     online(name)
 
     if String.starts_with?(v, "Checksum\t") do
-      VeCollector.VE.ClearText.parse(v)
+      VeCollector.VE.ClearText.parse(v, name)
     else
       Logger.warn("this binary should not come from #{name}, #{inspect(v)}")
     end

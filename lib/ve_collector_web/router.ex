@@ -13,6 +13,12 @@ defmodule VeCollectorWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :metrics do
+    plug :accepts, ["text"]
+    plug VeCollectorWeb.Plugs.ContentVersion, "text/plain; version=0.0.4"
+    plug VeCollectorWeb.Plugs.ApplicationName, "ve_collector"
+  end
+
   scope "/", VeCollectorWeb do
     pipe_through :browser
 
@@ -20,9 +26,15 @@ defmodule VeCollectorWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", VeCollectorWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", VeCollectorWeb do
+   pipe_through :api
+  end
+
+  scope "/metrics", VeCollectorWeb do
+    pipe_through :metrics
+
+    get "/", MetricController, :index
+  end
 
   # Enables LiveDashboard only for development
   #

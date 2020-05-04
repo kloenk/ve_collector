@@ -5,7 +5,7 @@ defmodule VeCollector.VE.ClearText.Store do
   @moduledoc """
   Store cleartext data
   # TODO
-  make a hashmap to support multiple devices
+  - clear store completle every 5 minutes to avoid stale data (or add timestamp to data)
   """
 
   def start_link() do
@@ -32,18 +32,32 @@ defmodule VeCollector.VE.ClearText.Store do
     {:reply, state, state}
   end
 
-  def parse(list) when is_list(list) do
-    GenServer.cast(:ve_collector_cleartext_store, {:parse, list})
+  @doc """
+  put a value into a given place in the store
+
+  # Note
+  This function overrides parsing, so handle witch care
+  """
+  def put(name, value) do
+    GenServer.cast(:ve_collector_cleartext_store, {:put, name, value})
+  end
+
+  def handle_cast({:put, name, value}, state) do
+    {:noreply, Map.put(state, name, value)}
+  end
+
+  def parse(list, name) when is_list(list) do
+    GenServer.cast(:ve_collector_cleartext_store, {:parse, list, name})
   end
 
   # callback
   # FIXME: make it a filed in a hashmap and not override state
-  def handle_cast({:parse, list}, _state) when is_list(list) do
+  def handle_cast({:parse, list, name}, state) when is_list(list) do
     list =
       check(list)
       |> do_parse()
 
-    {:noreply, list}
+    {:noreply, Map.put(state, name, list)}
   end
 
   defp do_parse({:error, v}) do
@@ -59,6 +73,7 @@ defmodule VeCollector.VE.ClearText.Store do
       |> Stream.filter(&data_row?(&1))
       |> Stream.map(&parse_row(&1))
       |> Enum.into(%{})
+      |> find_pid()
 
     {:ok, list}
   end
@@ -71,6 +86,19 @@ defmodule VeCollector.VE.ClearText.Store do
     case row do
       [_, _] -> true
       _ -> :ok == Logger.warn("invalid row: #{inspect(row)}") and false
+    end
+  end
+
+  defp find_pid(data) when is_map(data) do
+    pid = Map.get(data, "PID", "0x0000")
+    |> find_pid()
+
+    Map.put(data, "product", pid)
+  end
+
+  defp find_pid(pid) when is_binary(pid) do
+    case pid do
+      "0x0000" -> "Unknown"
     end
   end
 

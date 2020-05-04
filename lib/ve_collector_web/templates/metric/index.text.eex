@@ -1,0 +1,29 @@
+# HELP <%= @application_name %>_up is 1 if the device could be reached and read from
+# TYPE <%= @application_name %>_up gauge
+<%= for {name, data} <- @metric_data_list do %>
+<%= @application_name %>_up{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>"} 1
+<% end %>
+
+# HELP <%= @application_name %>_voltage shows the voltage of the battery and the pannel (in milliVolt)
+# TYPE <%= @application_name %>_voltage gauge
+<%= for {name, data} <- @metric_data_list do %>
+<%= if Map.has_key?(data, "V") do %><%= @application_name %>_voltage{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "V") %> <% end %>
+<%= if Map.has_key?(data, "V2") do %><%= @application_name %>_voltage_2{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "V2") %> <% end %>
+<%= if Map.has_key?(data, "V3") do %><%= @application_name %>_voltage_3{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "V3") %> <% end %>
+<%= if Map.has_key?(data, "VS") do %><%= @application_name %>_voltage_starter{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "VS") %> <% end %>
+<%= if Map.has_key?(data, "VM") do %><%= @application_name %>_voltage_mid{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "VM") %> <% end %>
+<%= if Map.has_key?(data, "VPV") do %><%= @application_name %>_voltage_panel{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "VPV") %> <% end %>
+<%= if Map.has_key?(data, "H15") do %><%= @application_name %>_voltage_battery_min{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "H15") %> <% end %>
+<%= if Map.has_key?(data, "H16") do %><%= @application_name %>_voltage_battery_max{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "H16") %> <% end %>
+<% end %>
+
+# HELP <%= @application_name %>_current shows the current fo the battery and pannel (in mA)
+# TYPE <%= @application_name %>_current gauge
+<%= for {name, data} <- @metric_data_list do %>
+<%= if Map.has_key?(data, "I") do %><%= @application_name %>_current{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "I") %> <% end %>
+<%= if Map.has_key?(data, "I2") do %><%= @application_name %>_current_2{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "I2") %> <% end %>
+<%= if Map.has_key?(data, "I3") do %><%= @application_name %>_current_3{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "I3") %> <% end %>
+<%= if Map.has_key?(data, "IL") do %><%= @application_name %>_current_load{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "IL") %> <% end %>
+<% end %>
+
+# <%= inspect(@metric_data_list) %>
