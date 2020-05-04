@@ -31,7 +31,6 @@ defmodule VeCollector.Serial do
   defp stop(name, {pid}) do
     Circuits.UART.close(pid)
     Circuits.UART.stop(pid)
-    GenServer.cast(VeCollector.Serial.Store, {:stop, name})
     # VeCollector.Serial.Store.stop_child(name)
   end
 
@@ -49,6 +48,13 @@ defmodule VeCollector.Serial do
 
   def handle_call({:get_pid}, _from, {pid}) do
     {:reply, pid, {pid}}
+  end
+
+  # stop the connection (caller has to clean the Store part)
+  def handle_cast({:stop, name}, {pid}) do
+    Logger.info("stopping #{name}")
+    stop(name, {pid})
+    {:stop, :normal, {}}
   end
 
   # parse info
@@ -74,6 +80,8 @@ defmodule VeCollector.Serial do
 
   def handle_info({:circuits_uart, name, {:error, :eio}}, {pid}) do
     stop(name, {pid})
+    Logger.info("got eio from #{name}")
+    GenServer.cast(VeCollector.Serial.Store, {:stop, name})
     {:stop, :normal, {}}
   end
 

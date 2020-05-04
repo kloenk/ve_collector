@@ -4,6 +4,7 @@ defmodule VeCollector.Serial.Store do
   """
 
   use GenServer
+  require Logger
 
   @doc """
   name of the GenServer
@@ -23,15 +24,19 @@ defmodule VeCollector.Serial.Store do
   # TODO
   maybe can be replaced, because devices which are online, are monitored it the go offline
   """
+  @deprecated "remove?"
   def reset(pid \\ @name) do
-    GenServer.cast(pid, {:reset})
+    # GenServer.cast(pid, {:reset})
   end
 
   @doc """
+  This is a noop, and propably not needed
+  (if a devices was online, it will be closed when it disconnects)
   remove every devicse which is not marked as online
   """
-  def clear(pid \\ @name) do
-    GenServer.cast(pid, {:clear})
+  @deprecated "remove?"
+  def clear() do
+    GenServer.cast(@name, {:clear})
   end
 
   @doc """
@@ -97,6 +102,19 @@ defmodule VeCollector.Serial.Store do
     |> Enum.into(%{})
   end
 
+  # stop devices which are not online
+  defp stop([{name, pid} | tail], state) do
+    Logger.debug("stop #{name} because it is inactive")
+    GenServer.cast(pid, {:stop, name})
+    state = Map.delete(state, name)
+    stop(tail, state)
+  end
+
+  # empty for last element in tail
+  defp stop([], state) do
+    state
+  end
+
   # callbacks
   def handle_cast({:reset}, state) do
     state =
@@ -143,16 +161,17 @@ defmodule VeCollector.Serial.Store do
   end
 
   def handle_cast({:clear}, state) do
-    offline =
+    state =
       state
       |> Map.to_list()
       |> Stream.filter(fn v ->
         online?(v) == false
       end)
       |> Stream.map(&format(&1))
-      |> Enum.into(%{})
+      |> Enum.into([])
+      |> stop(state)
 
-    IO.puts("TODO: implement clear #{inspect(offline)}")
+    IO.puts("TODO: implement clear #{inspect(state)}")
 
     {:noreply, state}
   end
