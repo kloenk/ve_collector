@@ -34,6 +34,7 @@ defmodule VeCollectorWeb.Router do
     pipe_through :metrics
 
     get "/", MetricController, :index
+    get "/:port", MetricController, :port
   end
 
   # Enables LiveDashboard only for development

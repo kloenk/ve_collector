@@ -17,6 +17,18 @@ defmodule VeCollectorWeb.MetricController do
     |> render("index.text")
   end
 
+  def port(conn, %{"port" => port}) do
+    IO.puts "getting #{port}"
+    data =
+      VeCollector.VE.ClearText.Store.get()
+      |> Map.get(port, %{})
+    data = [(if online?({port, data}), do: format({port, data}))]
+
+      conn
+      |> assign(:metric_data_list, data)
+      |> render("index.text")
+  end
+
   defp online?({_name, state}) do
     case state do
       {:ok, _v} -> true
