@@ -4,7 +4,7 @@ use Mix.Config
 config :ve_collector, VeCollector.Repo,
   username: "kloenk",
   password: "",
-  #password: "postgres",
+  # password: "postgres",
   socket_dir: "/var/run/postgresql",
   database: "ve_collector",
   hostname: "localhost",

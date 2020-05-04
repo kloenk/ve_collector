@@ -180,8 +180,6 @@ defmodule VeCollector.Serial.Store do
     {:noreply, state}
   end
 
-
-
   def handle_cast({:stop, name}, state) do
     state =
       state
