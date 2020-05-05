@@ -7,5 +7,4 @@ defmodule VeCollectorWeb.Plugs.ContentVersion do
     conn
     |> put_resp_content_type(default)
   end
-
 end

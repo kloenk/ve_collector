@@ -90,8 +90,9 @@ defmodule VeCollector.VE.ClearText.Store do
   end
 
   defp find_pid(data) when is_map(data) do
-    pid = Map.get(data, "PID", "0x0000")
-    |> find_pid()
+    pid =
+      Map.get(data, "PID", "0x0000")
+      |> find_pid()
 
     Map.put(data, "product", pid)
   end

@@ -1,5 +1,6 @@
 defmodule VeCollectorWeb.Router do
   use VeCollectorWeb, :router
+  use Pow.Phoenix.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -7,6 +8,11 @@ defmodule VeCollectorWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+  end
+
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
   pipeline :api do
@@ -19,15 +25,37 @@ defmodule VeCollectorWeb.Router do
     plug VeCollectorWeb.Plugs.ApplicationName, "ve_collector"
   end
 
+  scope "/" do
+    pipe_through :browser
+
+    pow_session_routes()
+  end
+
   scope "/", VeCollectorWeb do
     pipe_through :browser
 
     get "/", PageController, :index
   end
 
+  # Pow user Routes
+  scope "/", Pow.Phoenix, as: "pow" do
+    pipe_through [:browser, :protected]
+
+    resources "/registration", RegistrationController,
+      singleton: true,
+      only: [:edit, :update, :delete]
+  end
+
+  # Live Dashboard router
+  scope "/" do
+    import Phoenix.LiveDashboard.Router
+    pipe_through [:browser, :protected]
+    live_dashboard "/dashboard", metrics: VeCollectorWeb.Telemetry
+  end
+
   # Other scopes may use custom stacks.
   scope "/api", VeCollectorWeb do
-   pipe_through :api
+    pipe_through :api
   end
 
   scope "/metrics", VeCollectorWeb do
@@ -35,21 +63,5 @@ defmodule VeCollectorWeb.Router do
 
     get "/", MetricController, :index
     get "/:port", MetricController, :port
-  end
-
-  # Enables LiveDashboard only for development
-  #
-  # If you want to use the LiveDashboard in production, you should put
-  # it behind authentication and allow only admins to access it.
-  # If your application does not have an admins-only section yet,
-  # you can use Plug.BasicAuth to set up some basic authentication
-  # as long as you are also using SSL (which you should anyway).
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
-
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: VeCollectorWeb.Telemetry
-    end
   end
 end

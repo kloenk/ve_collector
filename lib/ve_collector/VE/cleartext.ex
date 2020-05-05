@@ -29,9 +29,15 @@ defmodule VeCollector.VE.ClearText do
   # callbacks
   def handle_call({:parse, line, name}, _from, state) do
     cond do
-      String.starts_with?(line, ":") -> {:reply, {:error, :hex_command}, state}
-      String.starts_with?(line, "Checksum") -> {:reply, {:ok}, Map.put(state, name, parse_checksum(Map.get(state, name, []) ++ [line], name))}
-      true -> {:reply, {:ok}, Map.put(state, name, Map.get(state, name, []) ++ [line])}
+      String.starts_with?(line, ":") ->
+        {:reply, {:error, :hex_command}, state}
+
+      String.starts_with?(line, "Checksum") ->
+        {:reply, {:ok},
+         Map.put(state, name, parse_checksum(Map.get(state, name, []) ++ [line], name))}
+
+      true ->
+        {:reply, {:ok}, Map.put(state, name, Map.get(state, name, []) ++ [line])}
     end
   end
 end

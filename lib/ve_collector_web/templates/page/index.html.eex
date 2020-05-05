@@ -33,6 +33,9 @@
       <li>
         <a href="https://elixir-slackin.herokuapp.com/">Elixir on Slack</a>
       </li>
+      <li>
+        <%= link "Metrics", to: Routes.metric_path(@conn, :index) %>
+      </li>
     </ul>
   </article>
 </section>

@@ -17,6 +17,13 @@
             <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
               <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
             <% end %>
+            <%= if @current_user do %>
+            <li>Signed in as: <%= @current_user.email %></li>
+            <li><%= link "Sign out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
+            <li><%= link "Edit account", to: Routes.pow_registration_path(@conn, :edit) %></li>
+            <% else %>
+            <li><%= link "Sign in", to: Routes.pow_session_path(@conn, :new) %></li>
+            <% end %>
           </ul>
         </nav>
         <a href="https://phoenixframework.org/" class="phx-logo">

@@ -11,22 +11,23 @@ defmodule VeCollectorWeb.MetricController do
 
     IO.inspect(data)
 
-
     conn
     |> assign(:metric_data_list, data)
     |> render("index.text")
   end
 
   def port(conn, %{"port" => port}) do
-    IO.puts "getting #{port}"
+    IO.puts("getting #{port}")
+
     data =
       VeCollector.VE.ClearText.Store.get()
       |> Map.get(port, %{})
-    data = [(if online?({port, data}), do: format({port, data}))]
 
-      conn
-      |> assign(:metric_data_list, data)
-      |> render("index.text")
+    data = [if(online?({port, data}), do: format({port, data}))]
+
+    conn
+    |> assign(:metric_data_list, data)
+    |> render("index.text")
   end
 
   defp online?({_name, state}) do
@@ -39,5 +40,4 @@ defmodule VeCollectorWeb.MetricController do
   defp format({name, {:ok, data}}) do
     {name, data}
   end
-
 end

@@ -18,6 +18,12 @@ config :ve_collector, VeCollectorWeb.Endpoint,
   pubsub_server: VeCollector.PubSub,
   live_view: [signing_salt: "DuI+dF7t"]
 
+# Configures pow
+config :ve_collector, :pow,
+  user: VeCollector.Users.User,
+  repo: VeCollector.Repo,
+  web_module: VeCollectorWeb
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

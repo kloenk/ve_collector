@@ -7,5 +7,4 @@ defmodule VeCollectorWeb.Plugs.ApplicationName do
     conn
     |> assign(:application_name, default)
   end
-
 end
