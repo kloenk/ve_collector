@@ -9,16 +9,12 @@ defmodule VeCollectorWeb.MetricController do
       |> Stream.map(&format(&1))
       |> Enum.into([])
 
-    IO.inspect(data)
-
     conn
     |> assign(:metric_data_list, data)
     |> render("index.text")
   end
 
   def port(conn, %{"port" => port}) do
-    IO.puts("getting #{port}")
-
     data =
       VeCollector.VE.ClearText.Store.get()
       |> Map.get(port, %{})
