@@ -31,7 +31,12 @@ defmodule VeCollector.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: VeCollector.Supervisor]
-    Supervisor.start_link(children, opts)
+    ret = Supervisor.start_link(children, opts)
+
+    # populate default username/password
+    create(Application.get_env(:ve_collector, :admin_user))
+
+    ret
   end
 
   # Tell Phoenix to update the endpoint configuration
@@ -39,5 +44,20 @@ defmodule VeCollector.Application do
   def config_change(changed, _new, removed) do
     VeCollectorWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  # create user
+  defp create(config) do
+    {:ok, email} = Keyword.fetch(config, :email)
+    {:ok, password} = Keyword.fetch(config, :password)
+    Pow.Operations.create(
+      %{
+        "email" => email,
+        "password" => password,
+        "password_confirmation" => password
+      },
+      Application.get_env(:ve_collector, :pow)
+    )
+    |> IO.inspect()
   end
 end

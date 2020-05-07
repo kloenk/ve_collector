@@ -6,9 +6,10 @@ use Mix.Config
 # to provide built-in test partitioning in CI environment.
 # Run `mix help test` for more information.
 config :ve_collector, VeCollector.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "ve_collector_test#{System.get_env("MIX_TEST_PARTITION")}",
+  username: "kloenk",
+  password: "",
+  socket_dir: "/var/run/postgresql",
+  database: "ve_collector",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

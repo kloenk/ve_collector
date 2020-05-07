@@ -10,6 +10,10 @@ use Mix.Config
 config :ve_collector,
   ecto_repos: [VeCollector.Repo]
 
+config :ve_collector, :admin_user,
+  email: "admin@example.com",
+  password: "admin12345"
+
 # Configures the endpoint
 config :ve_collector, VeCollectorWeb.Endpoint,
   url: [host: "localhost"],
