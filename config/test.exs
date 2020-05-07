@@ -9,7 +9,7 @@ config :ve_collector, VeCollector.Repo,
   username: "kloenk",
   password: "",
   socket_dir: "/var/run/postgresql",
-  database: "ve_collector",
+  database: "ve_collector_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 

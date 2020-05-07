@@ -15,6 +15,10 @@ defmodule VeCollectorWeb.Router do
       error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
+  pipeline :admin do
+    plug VeCollectorWeb.Plugs.EnsureRole, :admin
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -49,7 +53,7 @@ defmodule VeCollectorWeb.Router do
   # Live Dashboard router
   scope "/" do
     import Phoenix.LiveDashboard.Router
-    pipe_through [:browser, :protected]
+    pipe_through [:browser, :protected, :admin]
     live_dashboard "/dashboard", metrics: VeCollectorWeb.Telemetry
   end
 

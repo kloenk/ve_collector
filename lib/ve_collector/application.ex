@@ -34,8 +34,9 @@ defmodule VeCollector.Application do
     ret = Supervisor.start_link(children, opts)
 
     # populate default username/password
-    create(Application.get_env(:ve_collector, :admin_user))
-
+    if Mix.env() != :test do
+      create(Application.get_env(:ve_collector, :admin_user))
+    end
     ret
   end
 
@@ -50,14 +51,15 @@ defmodule VeCollector.Application do
   defp create(config) do
     {:ok, email} = Keyword.fetch(config, :email)
     {:ok, password} = Keyword.fetch(config, :password)
-    Pow.Operations.create(
-      %{
-        "email" => email,
-        "password" => password,
-        "password_confirmation" => password
-      },
-      Application.get_env(:ve_collector, :pow)
-    )
-    |> IO.inspect()
+    #Pow.Operations.create(
+    #  %{
+    #    "email" => email,
+    #    "password" => password,
+    #    "password_confirmation" => password
+    #  },
+    #  Application.get_env(:ve_collector, :pow)
+    #)
+    #|> IO.inspect()
+    VeCollector.Users.create_admin(%{email: email, password: password, password_confirmation: password}) |> IO.inspect()
   end
 end
