@@ -51,15 +51,6 @@ defmodule VeCollector.Application do
   defp create(config) do
     {:ok, email} = Keyword.fetch(config, :email)
     {:ok, password} = Keyword.fetch(config, :password)
-    #Pow.Operations.create(
-    #  %{
-    #    "email" => email,
-    #    "password" => password,
-    #    "password_confirmation" => password
-    #  },
-    #  Application.get_env(:ve_collector, :pow)
-    #)
-    #|> IO.inspect()
-    VeCollector.Users.create_admin(%{email: email, password: password, password_confirmation: password}) |> IO.inspect()
+    VeCollector.Users.create_admin(%{email: email, password: password, password_confirmation: password})
   end
 end

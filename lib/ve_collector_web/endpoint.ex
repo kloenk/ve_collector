@@ -51,5 +51,6 @@ defmodule VeCollectorWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug Pow.Plug.Session, otp_app: :ve_collector
+  plug PowPersistentSession.Plug.Cookie
   plug VeCollectorWeb.Router
 end

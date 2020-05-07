@@ -26,7 +26,8 @@ config :ve_collector, VeCollectorWeb.Endpoint,
 config :ve_collector, :pow,
   user: VeCollector.Users.User,
   repo: VeCollector.Repo,
-  web_module: VeCollectorWeb
+  web_module: VeCollectorWeb,
+  extensions: [PowPersistentSession]
 
 # Configures Elixir's Logger
 config :logger, :console,
