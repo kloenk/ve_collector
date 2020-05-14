@@ -53,7 +53,7 @@ defmodule VeCollectorWeb.Router do
   # Live Dashboard router
   scope "/" do
     import Phoenix.LiveDashboard.Router
-    pipe_through [:browser, :protected, :admin]
+    pipe_through [:browser, :admin]
     live_dashboard "/dashboard", metrics: VeCollectorWeb.Telemetry
   end
 
