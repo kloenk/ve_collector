@@ -24,7 +24,7 @@ defmodule VeCollectorWeb.Endpoint do
     at: "/",
     from: :ve_collector,
     gzip: false,
-    only: ~w(css fonts images js favicon.svg  robots.txt)
+    only: ~w(css fonts images js site.webmanifest favicon.svg  robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
