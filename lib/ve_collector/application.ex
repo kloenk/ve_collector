@@ -23,7 +23,9 @@ defmodule VeCollector.Application do
       # Serial Discovery service
       {VeCollector.Serial.Discover, []},
       # Serial device registry
-      {VeCollector.Serial.Store, []}
+      {VeCollector.Serial.Store, []},
+      # Static data registry
+      {VeCollector.VE.Hex.Store, []}
       # Start a worker by calling: VeCollector.Worker.start_link(arg)
       # {VeCollector.Worker, arg}
     ]
