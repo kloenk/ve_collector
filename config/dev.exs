@@ -7,7 +7,7 @@ config :ve_collector, VeCollector.Repo,
   # password: "postgres",
   socket_dir: "/var/run/postgresql",
   database: "ve_collector",
-  hostname: "localhost",
+  hostname: "192.168.178.61",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
