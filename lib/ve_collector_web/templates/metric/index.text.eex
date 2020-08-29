@@ -26,7 +26,8 @@
 <%= if Map.has_key?(data, "IL") do %><%= @application_name %>_current_load{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "IL") %><% end %>
 <%= if Map.has_key?(data, "PPV") do %><%= @application_name %>_current_watt{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "PPV") %><% end %>
 <%= if Map.has_key?(data, "CS") do %><%= @application_name %>_operation_state{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "CS") %><% end %>
+<%= if Map.has_key?(data, "AC_OUT_V") do %><%= @application_name %>_current_ac_out_v{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "AC_OUT_V") %><% end %>
+<%= if Map.has_key?(data, "AR") do %><%= @application_name %>_a{<%= VeCollectorWeb.Templates.Metric.labels(name, data) %>} <%= Map.get(data, "AR") %><% end %>
 <% end %>
-
 
 # <%= inspect(@metric_data_list) %>
