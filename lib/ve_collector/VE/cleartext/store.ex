@@ -100,7 +100,7 @@ defmodule VeCollector.VE.ClearText.Store do
   defp find_pid(pid) when is_binary(pid) do
     case pid do
       "0x0000" -> "Unknown"
-      _ -> "Unknown"
+      _ -> pid
     end
   end
 
