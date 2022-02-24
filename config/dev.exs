@@ -1,15 +1,17 @@
 use Mix.Config
 
 # Configure your database
+#config :ve_collector, VeCollector.Repo,
+#  username: "kloenk",
+#  password: "",
+#  # password: "postgres",
+#  socket_dir: "/var/run/postgresql",
+#  database: "ve_collector",
+#  hostname: "localhost",
+#  show_sensitive_data_on_connection_error: true,
+#  pool_size: 10
 config :ve_collector, VeCollector.Repo,
-  username: "kloenk",
-  password: "",
-  # password: "postgres",
-  socket_dir: "/var/run/postgresql",
-  database: "ve_collector",
-  hostname: "192.168.178.61",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  database: "./dev.db"
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
