@@ -100,6 +100,8 @@ defmodule VeCollector.VE.ClearText.Store do
   defp find_pid(pid) when is_binary(pid) do
     case pid do
       "0x0000" -> "Unknown"
+      "0xA262" -> "Phoenix 24V / 800VA"
+      "0xA05F" -> "MPPT 100 / 20"
       _ -> pid
     end
   end
