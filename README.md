@@ -1,4 +1,6 @@
 # VeCollector
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FKloenk%2Fve_collector.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FKloenk%2Fve_collector?ref=badge_shield)
+
 
 To start your Phoenix server:
 
@@ -16,3 +18,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FKloenk%2Fve_collector.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FKloenk%2Fve_collector?ref=badge_large)
